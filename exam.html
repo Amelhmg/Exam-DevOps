@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background-color: #F0F0F0;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.menu {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+.button {
+  padding: 10px 20px;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #1565c0;
+}
+
+.table-container {
+  margin: 0 220px;
+  padding: 20px;
+  background-color: #ffffff;
+  border: 2px solid #4a90e2;
+  overflow: auto;
+}
+
+table {
+  width: 100%;
+}
+
+th,
+td {
+  text-align: center;
+  padding: 10px;
+}
+
+th {
+  background-color: #4a90e2;
+  color: white;
+}
+
+td {
+  background-color: #f0f0f0;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+  <div class="menu">
+    <button id="write" class="button">Remplir la BDD</button>
+    <input type="number" id="nb" value="10" style="width: 80px;">
+    <button id="select" class="button">Afficher tout le monde</button>
+    <button id="calculate" class="button">Calculer les âges</button>
+    <button id="delete" class="button">Supprimer</button>
+    <button id="clear" class="button">Effacer</button>
+  </div>
+</div>
+
+<div id="selectDiv">
+  <div class="table-container">
+    <table id="selectTab">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Nom</th>
+          <th>Prénom</th>
+          <th>Date de naissance</th>
+          <th>Âge</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+document.querySelector("#write").addEventListener("click", function() {
+  let nb = document.querySelector("#nb").value;
+  fetch('http://127.0.0.1:8800/' + nb)
+    .then(response => {
+      if (response.ok) return response.json();
+    })
+    .then(json => {
+      let p = document.createElement("p");
+      p.classList.add("msg");
+      p.appendChild(document.createTextNode(json.message));
+      document.querySelector(".menu").after(p);
+    });
+});
+
+document.querySelector("#select").addEventListener("click", function() {
+  fetch('http://127.0.0.1:8800/select')
+    .then(response => {
+      if (response.ok) return response.json();
+    })
+    .then(json => {
+      let tbody = document.querySelector("#selectTab tbody");
+      tbody.innerHTML = '';
+      for (let i = 0; i < json.utilisateurs.length; i++) {
+        let utilisateur = json.utilisateurs[i];
+        let tr = document.createElement('tr');
+
+        let checkboxTd = document.createElement('td');
+        let checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkboxTd.appendChild(checkbox);
+        tr.appendChild(checkboxTd);
+
+        let nomTd = document.createElement('td');
+        nomTd.appendChild(document.createTextNode(utilisateur.nom));
+        tr.appendChild(nomTd);
+
+        let prenomTd = document.createElement('td');
+        prenomTd.appendChild(document.createTextNode(utilisateur.prenom));
+        tr.appendChild(prenomTd);
+
+        let dateNaissanceTd = document.createElement('td');
+        dateNaissanceTd.appendChild(document.createTextNode(utilisateur.date_naissance));
+        tr.appendChild(dateNaissanceTd);
+
+        let ageTd = document.createElement('td');
+        tr.appendChild(ageTd);
+
+        tbody.appendChild(tr);
+      }
+    });
+});
+
+document.querySelector("#calculate").addEventListener("click", function() {
+  fetch('http://127.0.0.1:8800/select')
+    .then(response => {
+      if (response.ok) return response.json();
+    })
+    .then(json => {
+      let tbody = document.querySelector("#selectTab tbody");
+      let rows = tbody.getElementsByTagName('tr');
+      for (let i = 0; i < rows.length; i++) {
+        let row = rows[i];
+        let ageTd = document.createElement('td');
+        let dateNaissance = row.cells[3].textContent;
+        let birthDate = new Date(dateNaissance);
+        let today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        if (
+          today.getMonth() < birthDate.getMonth() ||
+          (today.getMonth() === birthDate.getMonth() && today.getDate() < birthDate.getDate())
+        ) {
+          age -= 1;
+        }
+        ageTd.appendChild(document.createTextNode(age));
+        row.replaceChild(ageTd, row.cells[4]);
+      }
+    });
+});
+
+document.querySelector("#delete").addEventListener("click", function() {
+  let checkboxes = document.querySelectorAll("#selectTab tbody input[type='checkbox']:checked");
+  let rowsToDelete = Array.from(checkboxes).map(checkbox => checkbox.parentNode.parentNode);
+  rowsToDelete.forEach(row => row.parentNode.removeChild(row));
+});
+
+document.querySelector("#clear").addEventListener("click", function() {
+  fetch('http://127.0.0.1:8800/clear', { method: 'DELETE' })
+    .then(response => {
+      if (response.ok) {
+        let p = document.createElement("p");
+        p.classList.add("msg");
+        p.appendChild(document.createTextNode("La base de données a été effacée."));
+        document.querySelector(".menu").after(p);
+        document.querySelector("#selectTab tbody").innerHTML = '';
+      }
+    });
+});
+</script>
+</body>
+</html>
