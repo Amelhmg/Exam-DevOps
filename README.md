@@ -9,8 +9,9 @@ Application Python
 - ` /select` : Récupère les informations de tous les utilisateurs depuis la base de données.
 
 ## Exemples
-Pour remplir la base de données avec 10 enregistrements utilisateur, effectuez la requête suivante : http://localhost:8800/10
-Pour récupérer les informations de tous les utilisateurs, effectuez la requête suivante : http://localhost:8800/select
+1.Pour remplir la base de données avec 10 enregistrements utilisateur, effectuez la requête suivante : http://localhost:8800/10
+
+2.Pour récupérer les informations de tous les utilisateurs, effectuez la requête suivante : http://localhost:8800/select
 
 
 ## Technologies Utilisées
