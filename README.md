@@ -1,3 +1,6 @@
+## Code Source
+Le code source de ce projet se trouve dans la branche `master` de ce dépôt. Assurez-vous de consulter cette branche pour accéder au code.
+
 # Exam-DevOps
 Application Python
 
