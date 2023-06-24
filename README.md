@@ -4,6 +4,7 @@ Le code source de ce projet se trouve dans la branche `master` de ce dépôt. As
 # Exam-DevOps
 
 Application de Gestion des Utilisateurs
+
 Cette application Python vous permet de gérer une liste d'utilisateurs en calculant leur âge et en offrant la possibilité de les supprimer de la base de données. 
 Elle utilise une base de données SQLite pour stocker les informations des utilisateurs, telles que leur nom, prénom et date de naissance.
 
