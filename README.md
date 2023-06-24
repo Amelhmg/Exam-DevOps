@@ -7,6 +7,11 @@ Application Python
 2. Utilisez les points d'accès suivants pour interagir avec l'API :
 - ` /<nb_rows>` : Remplit la base de données avec le nombre spécifié.
 - ` /select` : Récupère les informations de tous les utilisateurs depuis la base de données.
+  ou
+  Vous pouvez également accéder à l'API en ouvrant le fichier `index.html` dans votre navigateur. La page `index.html` vous permettra 
+  d'interagir avec l'API en utilisant une interface conviviale.
+
+
 
 ## Exemples
 1.Pour remplir la base de données avec 10 enregistrements utilisateur, effectuez la requête suivante : http://localhost:8800/10
